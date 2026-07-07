@@ -607,6 +607,26 @@ footer .myth { max-width: 46ch; }
 .pulse-faces span.sel { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
 .stack { display: grid; gap: 16px; }
 
+/* ================= VIDEO MOCK ================= */
+.video-stage { position: relative; aspect-ratio: 16 / 9; background: #14313A; overflow: hidden; border-radius: 8px; }
+.video-stage .scene { position: absolute; inset: 0; opacity: 0; transition: opacity .25s ease; }
+.video-stage .scene.on { opacity: 1; }
+.video-stage .scene svg { width: 100%; height: 100%; display: block; transition: filter .45s ease, transform .45s ease; }
+.video-stage.is-blurred .scene svg { filter: blur(18px) saturate(1.25); transform: scale(1.12); }
+.vchip { position: absolute; left: 10px; top: 10px; z-index: 3; font-family: ui-monospace, Consolas, monospace; font-size: .66rem; padding: 4px 10px; border-radius: 4px; color: #fff; letter-spacing: .02em; }
+.vchip.ok { background: var(--allow); }
+.vchip.no { background: var(--block); }
+.vchip.unsure { background: #5A6B4F; }
+.sample-dot { position: absolute; right: 12px; top: 12px; z-index: 3; width: 10px; height: 10px; border-radius: 50%; background: #7ED4CE; animation: samplepulse 1.5s ease-in-out infinite; }
+@keyframes samplepulse { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+.drift { animation: drift 7s ease-in-out infinite alternate; }
+@keyframes drift { from { transform: translateX(-6px); } to { transform: translateX(10px); } }
+.vplayer { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--frame-ink); }
+.vplayer .ptri { width: 0; height: 0; border-left: 10px solid var(--frame-ink); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.vprog { flex: 1; height: 5px; border-radius: 3px; background: var(--frame-2); overflow: hidden; }
+.vprog i { display: block; height: 100%; width: 0; background: #7ED4CE; }
+.vtime { font-family: ui-monospace, Consolas, monospace; font-size: .68rem; font-variant-numeric: tabular-nums; }
+
 /* ================= INDEX ================= */
 .index-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
 @media (max-width: 980px) { .index-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -822,7 +842,7 @@ footer .myth { max-width: 46ch; }
         <li class="reveal"><strong>Dubbel gekeurd.</strong> <span>Cloud-analyse met een lokaal AI-model als achtervang — er is altijd een keurmeester, ook offline.</span></li>
       </ul>
     </div>
-    <div class="visual">
+    <div class="visual stack">
       <div class="dial-card reveal">
         <div class="dial-head">
           <h3>Eén meetlat, per profiel afgesteld</h3>
@@ -879,6 +899,50 @@ footer .myth { max-width: 46ch; }
           </figure>
         </div>
         <p class="dial-note" id="dial-note">Profiel <strong>kind</strong>: alles vanaf ernst&nbsp;2 blijft wazig — óók zwemkleding en artistiek naakt. De ernstscores zijn echte metingen op de schaal 0&ndash;6 van de beeldanalyse.</p>
+      </div>
+      <div class="device reveal">
+        <div class="device-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="addr"><span class="lock">&#9679;</span> videoplatform.example &middot; frame-bewaking actief</span>
+        </div>
+        <div class="device-body">
+          <div class="video-stage is-blurred" id="vstage">
+            <div class="scene sA on">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-label="Natuurfilm, veilig fragment">
+                <rect width="160" height="90" fill="#BFE0E8"/>
+                <circle cx="128" cy="18" r="9" fill="#F2D089"/>
+                <g class="drift" fill="#FFFFFF" opacity=".85">
+                  <ellipse cx="46" cy="20" rx="14" ry="5"/>
+                  <ellipse cx="58" cy="24" rx="10" ry="4"/>
+                  <ellipse cx="102" cy="32" rx="12" ry="4"/>
+                </g>
+                <polygon points="0,90 44,36 88,90" fill="#3E7C74"/>
+                <polygon points="58,90 104,44 150,90" fill="#2A5A56"/>
+                <polygon points="120,90 148,58 176,90" fill="#41806B"/>
+              </svg>
+            </div>
+            <div class="scene sB">
+              <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-label="Onveilig fragment, geblurd">
+                <rect width="160" height="90" fill="#7E5561"/>
+                <line x1="-20" y1="90" x2="70" y2="-20" stroke="#936976" stroke-width="10"/>
+                <line x1="20" y1="104" x2="120" y2="-14" stroke="#6B4351" stroke-width="10"/>
+                <line x1="70" y1="108" x2="170" y2="-4" stroke="#936976" stroke-width="10"/>
+                <line x1="110" y1="112" x2="200" y2="6" stroke="#6B4351" stroke-width="10"/>
+              </svg>
+            </div>
+            <span class="vchip unsure" id="vchip">eerst wazig &middot; oordeel onderweg</span>
+            <span class="sample-dot" aria-hidden="true"></span>
+          </div>
+          <div class="vplayer" aria-hidden="true">
+            <span class="ptri"></span>
+            <span class="vprog"><i id="vprog-i"></i></span>
+            <span class="vtime" id="vtime">0:00 / 0:11</span>
+          </div>
+          <div class="verdict-log" id="vlog" style="min-height:96px;margin-top:10px" aria-live="polite"></div>
+          <div class="demo-foot">
+            <span class="note">Tijdens het afspelen wordt doorlopend een frame gekeurd — de blur reageert binnen &eacute;&eacute;n controlemoment.</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1738,6 +1802,79 @@ footer .myth { max-width: 46ch; }
       Object.keys(panels).forEach(function (k) { panels[k].hidden = (k !== kind); });
     });
   });
+
+  /* ---------- video blur demo ---------- */
+  var vstage = document.getElementById('vstage');
+  if (vstage) {
+    var vchip = document.getElementById('vchip');
+    var vlog = document.getElementById('vlog');
+    var vprogEl = document.getElementById('vprog-i');
+    var vtimeEl = document.getElementById('vtime');
+    var sceneA = vstage.querySelector('.sA');
+    var sceneB = vstage.querySelector('.sB');
+    var VDUR = 11000;
+    var vTimers = [];
+    var vStart = 0;
+    var vSeen = false;
+
+    function vChip(cls, txt) { vchip.className = 'vchip ' + cls; vchip.textContent = txt; }
+    function vLogAdd(html, cls) {
+      var d = document.createElement('div');
+      if (cls) d.className = cls;
+      d.innerHTML = html;
+      vlog.appendChild(d);
+    }
+
+    function vStatic() {
+      sceneA.classList.remove('on');
+      sceneB.classList.add('on');
+      vstage.classList.add('is-blurred');
+      vChip('no', 'sexual 4 · wazig');
+      vlog.innerHTML = '';
+      vLogAdd('video-monitor &middot; start wazig &middot; frame 1 veilig <span class="l-ok">&rarr; tonen</span>', 'l-head');
+      vLogAdd('frame 34 &middot; sc&egrave;newissel &middot; sexual 4 <span class="l-no">&rarr; direct weer wazig</span>');
+      vLogAdd('frame 52 &middot; veilig <span class="l-ok">&rarr; tonen</span> &middot; scherp doorgelaten in de tussentijd: 0 frames');
+      if (vprogEl) vprogEl.style.width = '55%';
+      if (vtimeEl) vtimeEl.textContent = '0:06 / 0:11';
+    }
+
+    function vRun() {
+      vTimers.forEach(clearTimeout);
+      vTimers = [];
+      vstage.classList.add('is-blurred');
+      sceneB.classList.remove('on');
+      sceneA.classList.add('on');
+      vlog.innerHTML = '';
+      vChip('unsure', 'eerst wazig · oordeel onderweg');
+      vStart = performance.now();
+      var ev = [
+        [900, function () { vstage.classList.remove('is-blurred'); vChip('ok', 'veilig · tonen'); vLogAdd('video-monitor &middot; start wazig &middot; frame 1 veilig <span class="l-ok">&rarr; tonen</span>', 'l-head'); }],
+        [5200, function () { sceneA.classList.remove('on'); sceneB.classList.add('on'); }],
+        [5450, function () { vstage.classList.add('is-blurred'); vChip('no', 'sexual 4 · wazig'); vLogAdd('frame 34 &middot; sc&egrave;newissel &middot; sexual 4 <span class="l-no">&rarr; direct weer wazig</span>'); }],
+        [8300, function () { sceneB.classList.remove('on'); sceneA.classList.add('on'); }],
+        [8700, function () { vstage.classList.remove('is-blurred'); vChip('ok', 'veilig · tonen'); vLogAdd('frame 52 &middot; veilig <span class="l-ok">&rarr; tonen</span> &middot; scherp doorgelaten in de tussentijd: 0 frames'); }],
+        [VDUR, vRun]
+      ];
+      ev.forEach(function (e) { vTimers.push(setTimeout(e[1], e[0])); });
+    }
+
+    if (rm || !('IntersectionObserver' in window)) {
+      vStatic();
+    } else {
+      var vio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !vSeen) { vSeen = true; vRun(); vio.disconnect(); }
+        });
+      }, { threshold: 0.3 });
+      vio.observe(vstage);
+      setInterval(function () {
+        if (!vSeen) return;
+        var el = (performance.now() - vStart) % VDUR;
+        if (vprogEl) vprogEl.style.width = (el / VDUR * 100) + '%';
+        if (vtimeEl) vtimeEl.textContent = '0:' + String(Math.floor(el / 1000)).padStart(2, '0') + ' / 0:11';
+      }, 200);
+    }
+  }
 })();
 </script>
 
